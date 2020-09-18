@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
-import { mongoUrl } from './config/config'
+import { mongoUrl } from './config'
 
 mongoose.Promise = Promise;
+
+// Must set property to false according to https://mongoosejs.com/docs/deprecations.html#findandmodify
+mongoose.set('useFindAndModify', false);
 
 mongoose.connection.on('connected', () => {
     console.log('Mongo connection established!');

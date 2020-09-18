@@ -1,4 +1,4 @@
-import * as db from './db';
+import * as db from './config/db';
 import express from 'express';
 import { gameRouter } from './src/game/routes/gameRoutes';
 
