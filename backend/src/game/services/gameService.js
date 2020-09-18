@@ -52,11 +52,9 @@ export const createNewGame = async req => {
 
 export const makeMove = async req => {
     const body = req.body;
-    console.log('will compute move', req.body);
     let updatedGame = {};
     try {
         let result = calculateResult(body.playerOne, body.playerTwo);
-        console.log('result from move is', result)
         updatedGame = await findOneAndUpdate(
             { _id: body.gameId },
             { $push: { rounds: result } },
@@ -65,7 +63,6 @@ export const makeMove = async req => {
     } catch (error) {
         console.error(error);
     }
-    console.log('Updated game is', updatedGame)
     let gameResult = determineWinner(updatedGame.rounds);
     let finishedGame = {}
     if (gameResult.winner != 0) {

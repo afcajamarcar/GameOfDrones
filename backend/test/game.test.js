@@ -23,7 +23,6 @@ describe('Game of Drones game test suite', () => {
                 .end((err, res) => {
                     if (err) console.error(err);
                     const body = res.body;
-                    console.log('Response from game creation', body);
                     assert.exists(body._id, 'game id is neither null nor undefined');
                     assert.strictEqual(mongoDbIdLength, body._id.length);
                     assert.exists(body.playerOne, 'playerOne is neither null nor undefined');
@@ -56,7 +55,6 @@ describe('Game of Drones game test suite', () => {
             .expect(200)
             .then(res => {
                 const body = res.body;
-                console.log('game creation before any moves', body)
                 request(server)
                     .post('/api/make_move')
                     .send({
@@ -69,7 +67,6 @@ describe('Game of Drones game test suite', () => {
                     .expect(200)
                     .then(res => {
                         const body = res.body;
-                        console.log('Response from move made', body);
                         assert.exists(body._id, 'game id is neither null nor undefined');
                         assert.exists(body.playerOne, 'playerOne is neither null nor undefined');
                         assert.exists(body.playerTwo, 'playerTwo is neither null nor undefined');
@@ -88,7 +85,6 @@ describe('Game of Drones game test suite', () => {
                             .expect(200)
                             .then(res => {
                                 const body = res.body;
-                                console.log('Response from move made', body);
                                 assert.equal(1, body.rounds[1], 'playerOne should have won the second round');
                                 request(server)
                                     .post('/api/make_move')
@@ -103,7 +99,6 @@ describe('Game of Drones game test suite', () => {
                                     .end((err, res) => {
                                         if (err) console.error(err);
                                         const body = res.body;
-                                        console.log('Response from move made', body);
                                         assert.equal(1, body.rounds[1], 'playerOne should have won the thid round');
                                         assert.equal(body.winner, body.playerOne, 'playerOne should have won the match');
                                     });
