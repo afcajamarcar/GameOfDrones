@@ -26,7 +26,11 @@ export const handleMakeMoveAction = async (req, res) => {
     }
 };
 
-export const handleError = (message) => {
+export const handleNotAllowedCall = res => {
+    return res.status(405).json({ message: 'Method Not Allowed'})
+}
+
+const handleError = (message) => {
     switch (message) {
         case 'missing-body-parameters':
             return { status: 400, message: message };
