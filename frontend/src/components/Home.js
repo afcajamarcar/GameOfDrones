@@ -3,6 +3,8 @@ import useCreateNewGame from '../api/useCreateNewGame';
 import Game from './Game';
 import { useSelector } from 'react-redux';
 
+import { Button, FormControl, Input, InputLabel } from '@material-ui/core';
+
 function Home() {
     const [playerOne, setPlayerOne] = useState('');
     const [playerTwo, setPlayerTwo] = useState('');
@@ -33,25 +35,35 @@ function Home() {
                     ?
                     <Game />
                     :
-                    <div style={{width: '100%', textAlign: 'center', marginTop: '10%'}}>
-                        <form style={{display: 'inline-grid'}}>
-                            <label htmlFor="playerOne">Player One</label>
-                            <input
-                                id="playerOne"
-                                name='playerOne'
-                                type="text"
-                                value={playerOne}
-                                onChange={e => handleChange(e)}
-                            />
-                            <label style={{marginTop: '20px'}} htmlFor="playerOne">Player Two</label>
-                            <input
-                                id="playerTwo"
-                                name='playerTwo'
-                                type="text"
-                                value={playerTwo}
-                                onChange={e => handleChange(e)} />
-                            <button style={{marginTop: '20px'}} onClick={e => handleSubmit(e)}>Start game</button>
-                        </form>
+                    <div style={{ width: '100%', marginTop: '10%', textAlign: 'center' }}>
+                        <div style={{ width: '50%', display: 'inline-grid' }}>
+                            <FormControl>
+                                <InputLabel >Player One</InputLabel>
+                                <Input
+                                    id="playerOne"
+                                    name='playerOne'
+                                    type="text"
+                                    value={playerOne}
+                                    onChange={e => handleChange(e)}
+                                />
+                            </FormControl>
+                            <FormControl style={{marginTop: '25px'}}>
+                                <InputLabel >Player Two</InputLabel>
+                                <Input
+                                    id="playerTwo"
+                                    name='playerTwo'
+                                    type="text"
+                                    value={playerTwo}
+                                    onChange={e => handleChange(e)} />
+                            </FormControl>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                style={{ marginTop: '25px' }}
+                                onClick={e => handleSubmit(e)}>
+                                Start game
+                            </Button>
+                        </div>
                     </div>
             }
 
