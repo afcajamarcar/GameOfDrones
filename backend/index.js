@@ -1,10 +1,13 @@
 import * as db from './config/db';
 import express from 'express';
+import cors from 'cors';
 import { gameRouter } from './src/game/routes/gameRoutes';
 
 const app = express();
 
 const port = process.env.PORT || 5000;
+
+app.use(cors()); // Allow to receive request while develop phase
 
 (async () => { await db.initMongo() })();
 

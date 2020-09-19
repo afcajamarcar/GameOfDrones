@@ -1,10 +1,13 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import Home from './components/Home';
 
 function App() {
   return (
     <div>
-      <h3>Game of Drones!</h3>
+      <Switch>
+        <Route component={Home} path='/' />
+      </Switch>
     </div>
   );
 }
