@@ -35,6 +35,7 @@ const determineWinner = rounds => {
 
 export const createNewGame = async req => {
     const body = req.body;
+    if (!body.playerOne || !body.playerTwo) return { isError: true, message: 'missing-body-parameters' };
     try {
         let newGame = await createGame(
             {
@@ -47,11 +48,15 @@ export const createNewGame = async req => {
         return newGame;
     } catch (error) {
         console.error(error);
+        return { isError: true, message: 'error-creating-game' };
     }
 };
 
 export const makeMove = async req => {
     const body = req.body;
+    if (!body.playerOne || !body.playerTwo || !body.gameId) { 
+        return { isError: true, message: 'missing-body-parameters' }; 
+    }
     let updatedGame = {};
     try {
         let result = calculateResult(body.playerOne, body.playerTwo);
@@ -62,6 +67,7 @@ export const makeMove = async req => {
         );
     } catch (error) {
         console.error(error);
+        return { isError: true, message: 'error-updating-game' };
     }
     let gameResult = determineWinner(updatedGame.rounds);
     let finishedGame = {}
@@ -80,6 +86,7 @@ export const makeMove = async req => {
             );
         } catch (error) {
             console.error(error);
+            return { isError: true, message: 'error-setting-winnner' };
         }
         return finishedGame;
     }
