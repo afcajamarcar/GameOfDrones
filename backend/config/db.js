@@ -28,7 +28,7 @@ mongoose.connection.on('error', (error) => {
 
 export const initMongo = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/gameOfDrones', {
+        await mongoose.connect(mongoUrl, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
