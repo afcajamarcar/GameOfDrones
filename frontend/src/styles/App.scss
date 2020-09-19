@@ -1,0 +1,10 @@
+// Keep all styles in same sheet to allow components to access to them everywhere
+@import './variables';
+@import './home';
+@import './game';
+@import './header';
+@import './historic';
+
+html, body {
+    background-color: $light-grey;
+}

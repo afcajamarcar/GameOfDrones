@@ -13,7 +13,7 @@ gameRouter.use(express.json()); // Middleware to parse incoming requests
 
 
 gameRouter
-    .get('/games_list', (req, res) => { return handleGetGamesList(res)})
+    .get('/games_list', (req, res) => { return handleGetGamesList(req, res)})
     .all(res => { return handleNotAllowedCall(res) });
 
 gameRouter

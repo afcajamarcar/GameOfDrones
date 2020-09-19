@@ -23,9 +23,13 @@ export const findOneAndUpdate = async (query, operation, properties) => {
     }
 };
 
-export const fetchGames = async () => {
+export const fetchGames = async (req) => {
+    const options = {
+        page: req.query.page || 1,
+        limit: req.query.limit || 10
+    };
     try {
-        let gamesList = await Games.find({});
+        let gamesList = await Games.paginate({}, options);
         return gamesList;
     } catch (error) {
         throw new Error(error);
