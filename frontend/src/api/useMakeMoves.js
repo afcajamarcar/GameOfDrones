@@ -10,7 +10,6 @@ const useMakeMoves = body => {
     
     useEffect(() => {
         if(body.playerOne && body.playerTwo && body.gameId) {
-            console.log('body is', body);
             let isSubscribed = true;
             const fetchData = async () => {
                 try {
@@ -24,7 +23,6 @@ const useMakeMoves = body => {
                         options
                     );
                     const data = await res.data;
-                    console.log('data from make moves is', data);
                     if (isSubscribed) {
                         setResponse(data);
                         dispatch(storeCurrentGame(data));

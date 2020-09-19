@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import useMakeMoves from '../api/useMakeMoves';
+import { storeCurrentGame } from '../app/store/actions/gameActions';
+import { useHistory } from 'react-router-dom';
 
 import { Button, Card, CardContent, Typography } from '@material-ui/core';
 
@@ -23,13 +25,16 @@ function Game() {
 
     const [makeMovesBody, setMakeMovesBody] = useState({});
 
+    const history = useHistory();
+
+    const dispatch = useDispatch();
+
     useMakeMoves(makeMovesBody);
 
     const readyToMakeMove = playerOneMove && playerTwoMove &&
         currentGame._id && playerOneCommit && playerTwoCommit;
 
     const handleMoveSelectionP1 = move => {
-        console.log('player did move', move);
         setPlayerOneMove(move);
     };
 
@@ -51,14 +56,34 @@ function Game() {
         };
     };
 
+    const playAgain = () => {
+        dispatch(storeCurrentGame({}))
+    };
+
+    const goToResults = () => {
+        history.push('/results');
+    }
+
     return (
         <div className="center">
+            <div className="results">
+                <button className="link" onClick={() => goToResults()}>Results</button>
+            </div>
             <h2>Round {currentGame.winner ? "Result" : currentGame.rounds.length + 1}</h2>
             {
                 currentGame.winner ?
                     <div>
-                        <div>ABSOLUTE WINNER</div>
-                        <div>{currentGame.winner}</div>
+                        <h3>ABSOLUTE WINNER</h3>
+                        <div className="respect">
+                            <h4 >{currentGame.winner}</h4>
+                        </div>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className="respect"
+                            onClick={() => playAgain()}>
+                            Play Again!
+                        </Button>
                     </div>
                     :
                     <div className="row">
@@ -69,7 +94,7 @@ function Game() {
                                     <div>
                                         <Card
                                             className="card-style"
-                                            onClick={() => handleMoveSelectionP1(Moves.rock)}>
+                                            onClick={e => handleMoveSelectionP1(Moves.rock)}>
                                             <CardContent>
                                                 <Typography color="textPrimary" gutterBottom>
                                                     Rock

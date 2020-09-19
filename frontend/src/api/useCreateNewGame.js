@@ -10,7 +10,6 @@ const useCreateNewGame = body => {
     
     useEffect(() => {
         if(body.playerOne && body.playerTwo) {
-            console.log('body is', body);
             let isSubscribed = true;
             const fetchData = async () => {
                 try {
@@ -24,9 +23,7 @@ const useCreateNewGame = body => {
                         options
                     );
                     const data = await res.data;
-                    console.log('data is', data);
                     if (isSubscribed) {
-                        console.log('will set the madafaking data');
                         setResponse(data)
                         dispatch(storeCurrentGame(data));
                     }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useCreateNewGame from '../api/useCreateNewGame';
 import Game from './Game';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { Button, FormControl, Input, InputLabel } from '@material-ui/core';
 
@@ -10,7 +11,7 @@ function Home() {
     const [playerTwo, setPlayerTwo] = useState('');
     const [newGameBody, setNewGameBody] = useState({});
     const currentGame = useSelector(state => state);
-    console.log('currentGame from home', currentGame)
+    const history = useHistory();
 
     useCreateNewGame(newGameBody);
 
@@ -26,10 +27,12 @@ function Home() {
         setNewGameBody({ playerOne: playerOne, playerTwo: playerTwo });
     };
 
+    const goToResults = () => {
+        history.push('/results');
+    }
+
     return (
         <div className="center">
-            <h1 >Game of Drones!</h1>
-            <div >Logo super cool aca</div>
             {
                 currentGame._id
                     ?
@@ -66,7 +69,9 @@ function Home() {
                         </div>
                     </div>
             }
-
+            <div className="results">
+                <button className="link" onClick={() => goToResults()}>Results</button>
+            </div>
         </div>
     );
 }
