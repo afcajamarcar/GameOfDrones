@@ -1,6 +1,6 @@
-import * as db from './config/db';
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
+import * as db from './config/db';
 import { gameRouter } from './src/game/routes/gameRoutes';
 
 const app = express();

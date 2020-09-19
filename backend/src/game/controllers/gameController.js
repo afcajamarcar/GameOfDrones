@@ -1,13 +1,14 @@
 import { createNewGame, makeMove, getGamesList } from '../services/gameService';
 
 
-export const handleGetGamesList = async res => {
+export const handleGetGamesList = async (req, res) => {
     try {
-        const gamesList = await getGamesList();
+        const gamesList = await getGamesList(req);
         if (gamesList.isError) {
             let err = handleError(response.message);
             res.status(err.status).json({ message: err.message });
         }
+        return res.status(200).json(gamesList);
     } catch (error) {
         return handleError('Oops, something bad happened');
     }

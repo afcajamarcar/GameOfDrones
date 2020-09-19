@@ -54,9 +54,9 @@ const setWinner = async (gameResult, gameId, updatedGame) => {
     return finishedGame;
 };
 
-export const getGamesList = async () => {
+export const getGamesList = async (req) => {
     try {
-        return await fetchGames();
+        return await fetchGames(req);
     } catch (error) {
         console.error(error);
         return { isError: true, message: 'error-creating-game' };
