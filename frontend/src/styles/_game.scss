@@ -1,0 +1,26 @@
+.row {
+    display: table; 
+    width: 100%;
+
+    .column {
+        float: left; 
+        width: 50%;
+    }
+}
+
+.card-style {
+    width: 50%;
+    margin: 17px auto;
+}
+
+.card-selected-style {
+    border: solid $dark-magenta;
+}
+
+.respect {
+    padding: 4px;
+}
+
+.bottom-respect {
+    margin-bottom: 50px;
+}
