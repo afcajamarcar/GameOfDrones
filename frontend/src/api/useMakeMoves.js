@@ -1,9 +1,12 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { storeCurrentGame } from '../app/store/actions/gameActions';
 
 const useMakeMoves = body => {
     const [response, setResponse] = useState(null);
     const [error, setError] = useState(null);
+    const dispatch = useDispatch();
     
     useEffect(() => {
         if(body.playerOne && body.playerTwo && body.gameId) {
@@ -22,7 +25,10 @@ const useMakeMoves = body => {
                     );
                     const data = await res.data;
                     console.log('data from make moves is', data);
-                    if (isSubscribed) setResponse(data)
+                    if (isSubscribed) {
+                        setResponse(data);
+                        dispatch(storeCurrentGame(data));
+                    }
                 } catch (error) {
                     console.error('something happened', error);
                     setError(error);
@@ -31,7 +37,7 @@ const useMakeMoves = body => {
             if (isSubscribed) fetchData().then();
             return () => (isSubscribed = false);
         }
-    }, [body]);
+    }, [body, dispatch]);
     return { response, error };
 }
 

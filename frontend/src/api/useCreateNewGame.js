@@ -1,9 +1,12 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { storeCurrentGame } from '../app/store/actions/gameActions';
 
 const useCreateNewGame = body => {
     const [response, setResponse] = useState(null);
     const [error, setError] = useState(null);
+    const dispatch = useDispatch();
     
     useEffect(() => {
         if(body.playerOne && body.playerTwo) {
@@ -25,6 +28,7 @@ const useCreateNewGame = body => {
                     if (isSubscribed) {
                         console.log('will set the madafaking data');
                         setResponse(data)
+                        dispatch(storeCurrentGame(data));
                     }
                 } catch (error) {
                     console.error('something happened', error);
@@ -34,7 +38,7 @@ const useCreateNewGame = body => {
             if (isSubscribed) fetchData().then();
             return () => (isSubscribed = false);
         }
-    }, [body]);
+    }, [body, dispatch]);
 
     return { response, error };
 }
