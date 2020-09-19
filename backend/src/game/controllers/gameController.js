@@ -4,7 +4,6 @@ import { createNewGame, makeMove, getGamesList } from '../services/gameService';
 export const handleGetGamesList = async res => {
     try {
         const gamesList = await getGamesList();
-        console.log(gamesList);
         if (gamesList.isError) {
             let err = handleError(response.message);
             res.status(err.status).json({ message: err.message });
