@@ -1,10 +1,10 @@
-import { findOneAndUpdate, createGame } from '../models/queries/gameQueries';
+import { findOneAndUpdate, createGame, fetchGames } from '../models/queries/gameQueries';
 
 const MapPlayersToValues = {
     tie: 0,
     playerOne: 1,
     playerTwo: 2
-}
+};
 
 const calculateResult = (playerOneMove, playerTwoMove) => {
     let result = playerOneMove - playerTwoMove;
@@ -25,12 +25,42 @@ const determineWinner = rounds => {
         const playerOneRounds = rounds.filter(item => item == MapPlayersToValues.playerOne).length;
         const playerTwoRounds = rounds.filter(item => item == MapPlayersToValues.playerTwo).length;
         if (playerOneRounds > 2) {
-            return { winner: MapPlayersToValues.playerOne }
+            return { winner: MapPlayersToValues.playerOne };
         } else if (playerTwoRounds > 2) {
-            return { winner: MapPlayersToValues.playerTwo }
+            return { winner: MapPlayersToValues.playerTwo };
         }
     }
     return { winner: MapPlayersToValues.tie }; //default case for keep playing
+};
+
+const setWinner = async (gameResult, gameId, updatedGame) => {
+    let finishedGame = {};
+    try {
+        finishedGame = await findOneAndUpdate(
+            { _id: gameId },
+            {
+                $set: {
+                    winner: gameResult.winner == MapPlayersToValues.playerOne
+                        ? updatedGame.playerOne
+                        : updatedGame.playerTwo
+                }
+            },
+            { new: true }
+        );
+    } catch (error) {
+        console.error(error);
+        return { isError: true, message: 'error-setting-winnner' };
+    }
+    return finishedGame;
+};
+
+export const getGamesList = async () => {
+    try {
+        return await fetchGames();
+    } catch (error) {
+        console.error(error);
+        return { isError: true, message: 'error-creating-game' };
+    }
 };
 
 export const createNewGame = async req => {
@@ -70,25 +100,8 @@ export const makeMove = async req => {
         return { isError: true, message: 'error-updating-game' };
     }
     let gameResult = determineWinner(updatedGame.rounds);
-    let finishedGame = {}
     if (gameResult.winner != 0) {
-        try {
-            finishedGame = await findOneAndUpdate(
-                { _id: body.gameId },
-                {
-                    $set: {
-                        winner: gameResult.winner == MapPlayersToValues.playerOne
-                            ? updatedGame.playerOne
-                            : updatedGame.playerTwo
-                    }
-                },
-                { new: true }
-            );
-        } catch (error) {
-            console.error(error);
-            return { isError: true, message: 'error-setting-winnner' };
-        }
-        return finishedGame;
+        return setWinner(gameResult, body.gameId, updatedGame)
     }
     return updatedGame;
 };

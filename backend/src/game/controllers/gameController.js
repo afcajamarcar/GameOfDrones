@@ -1,4 +1,18 @@
-import { createNewGame, makeMove } from '../services/gameService';
+import { createNewGame, makeMove, getGamesList } from '../services/gameService';
+
+
+export const handleGetGamesList = async res => {
+    try {
+        const gamesList = await getGamesList();
+        console.log(gamesList);
+        if (gamesList.isError) {
+            let err = handleError(response.message);
+            res.status(err.status).json({ message: err.message });
+        }
+    } catch (error) {
+        return handleError('Oops, something bad happened');
+    }
+};
 
 export const handleCreateGameAction = async (req, res) => {
     try {
@@ -27,8 +41,8 @@ export const handleMakeMoveAction = async (req, res) => {
 };
 
 export const handleNotAllowedCall = res => {
-    return res.status(405).json({ message: 'Method Not Allowed'})
-}
+    return res.status(405).json({ message: 'Method Not Allowed'});
+};
 
 const handleError = (message) => {
     switch (message) {
@@ -41,4 +55,4 @@ const handleError = (message) => {
         default:
             return { status: 500, message: message };
     }
-}
+};
