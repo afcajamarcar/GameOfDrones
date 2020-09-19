@@ -1,10 +1,10 @@
-import { findOneAndUpdate, createGame } from '../models/queries/gameQueries';
+import { findOneAndUpdate, createGame, fetchGames } from '../models/queries/gameQueries';
 
 const MapPlayersToValues = {
     tie: 0,
     playerOne: 1,
     playerTwo: 2
-}
+};
 
 const calculateResult = (playerOneMove, playerTwoMove) => {
     let result = playerOneMove - playerTwoMove;
@@ -25,16 +25,47 @@ const determineWinner = rounds => {
         const playerOneRounds = rounds.filter(item => item == MapPlayersToValues.playerOne).length;
         const playerTwoRounds = rounds.filter(item => item == MapPlayersToValues.playerTwo).length;
         if (playerOneRounds > 2) {
-            return { winner: MapPlayersToValues.playerOne }
+            return { winner: MapPlayersToValues.playerOne };
         } else if (playerTwoRounds > 2) {
-            return { winner: MapPlayersToValues.playerTwo }
+            return { winner: MapPlayersToValues.playerTwo };
         }
     }
     return { winner: MapPlayersToValues.tie }; //default case for keep playing
 };
 
+const setWinner = async (gameResult, gameId, updatedGame) => {
+    let finishedGame = {};
+    try {
+        finishedGame = await findOneAndUpdate(
+            { _id: gameId },
+            {
+                $set: {
+                    winner: gameResult.winner == MapPlayersToValues.playerOne
+                        ? updatedGame.playerOne
+                        : updatedGame.playerTwo
+                }
+            },
+            { new: true }
+        );
+    } catch (error) {
+        console.error(error);
+        return { isError: true, message: 'error-setting-winnner' };
+    }
+    return finishedGame;
+};
+
+export const getGamesList = async () => {
+    try {
+        return await fetchGames();
+    } catch (error) {
+        console.error(error);
+        return { isError: true, message: 'error-creating-game' };
+    }
+};
+
 export const createNewGame = async req => {
     const body = req.body;
+    if (!body.playerOne || !body.playerTwo) return { isError: true, message: 'missing-body-parameters' };
     try {
         let newGame = await createGame(
             {
@@ -47,16 +78,18 @@ export const createNewGame = async req => {
         return newGame;
     } catch (error) {
         console.error(error);
+        return { isError: true, message: 'error-creating-game' };
     }
 };
 
 export const makeMove = async req => {
     const body = req.body;
-    console.log('will compute move', req.body);
+    if (!body.playerOne || !body.playerTwo || !body.gameId) { 
+        return { isError: true, message: 'missing-body-parameters' }; 
+    }
     let updatedGame = {};
     try {
         let result = calculateResult(body.playerOne, body.playerTwo);
-        console.log('result from move is', result)
         updatedGame = await findOneAndUpdate(
             { _id: body.gameId },
             { $push: { rounds: result } },
@@ -64,27 +97,11 @@ export const makeMove = async req => {
         );
     } catch (error) {
         console.error(error);
+        return { isError: true, message: 'error-updating-game' };
     }
-    console.log('Updated game is', updatedGame)
     let gameResult = determineWinner(updatedGame.rounds);
-    let finishedGame = {}
     if (gameResult.winner != 0) {
-        try {
-            finishedGame = await findOneAndUpdate(
-                { _id: body.gameId },
-                {
-                    $set: {
-                        winner: gameResult.winner == MapPlayersToValues.playerOne
-                            ? updatedGame.playerOne
-                            : updatedGame.playerTwo
-                    }
-                },
-                { new: true }
-            );
-        } catch (error) {
-            console.error(error);
-        }
-        return finishedGame;
+        return setWinner(gameResult, body.gameId, updatedGame)
     }
     return updatedGame;
 };

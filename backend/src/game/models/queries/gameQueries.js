@@ -22,3 +22,12 @@ export const findOneAndUpdate = async (query, operation, properties) => {
         throw new Error(error);
     }
 };
+
+export const fetchGames = async () => {
+    try {
+        let gamesList = await Games.find({});
+        return gamesList;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
