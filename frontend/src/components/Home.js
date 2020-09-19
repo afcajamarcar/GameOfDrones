@@ -27,16 +27,16 @@ function Home() {
     };
 
     return (
-        <div>
-            <h1 style={{ textAlign: 'center' }}>Game of Drones!</h1>
-            <div style={{ textAlign: 'center' }}>Logo super cool aca</div>
+        <div className="center">
+            <h1 >Game of Drones!</h1>
+            <div >Logo super cool aca</div>
             {
                 currentGame._id
                     ?
                     <Game />
                     :
-                    <div style={{ width: '100%', marginTop: '10%', textAlign: 'center' }}>
-                        <div style={{ width: '50%', display: 'inline-grid' }}>
+                    <div className="meta-container">
+                        <div className="form-container">
                             <FormControl>
                                 <InputLabel >Player One</InputLabel>
                                 <Input
@@ -47,7 +47,7 @@ function Home() {
                                     onChange={e => handleChange(e)}
                                 />
                             </FormControl>
-                            <FormControl style={{marginTop: '25px'}}>
+                            <FormControl className="separate-top">
                                 <InputLabel >Player Two</InputLabel>
                                 <Input
                                     id="playerTwo"
@@ -59,7 +59,7 @@ function Home() {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                style={{ marginTop: '25px' }}
+                                className="separate-top"
                                 onClick={e => handleSubmit(e)}>
                                 Start game
                             </Button>
